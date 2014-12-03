@@ -297,6 +297,7 @@ Expertiza::Application.routes.draw do
       get :select_reviewer
       get :select_mapping
       get :show_available_submissions
+      post :show_available_submissions
     end
   end
 
