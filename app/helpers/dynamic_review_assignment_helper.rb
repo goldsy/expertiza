@@ -87,8 +87,13 @@ module DynamicReviewAssignmentHelper
       submissions_in_current_cycle = AssignmentParticipant.where(parent_id: @assignment_id)
     else
       submissions_in_current_cycle = AssignmentParticipant.where(topic_id: @topic_id, parent_id: @assignment_id)
+      print('dynamic review assignment helper'+submissions_in_current_cycle.to_s)
     end
-    submissions_in_current_cycle.reject! { |submission| !submission.has_submissions? }
+    #print('dynamic review assignment helper'+@topic_id.to_s+'/')
+   # print(submission.has_submissions)
+   # print('@')
+   # print(submissions_in_current_cycle)
+    #submissions_in_current_cycle.reject! { |submission| !submission.has_submissions? }
 
     #  Create a new Hash to store the number of reviews that have already been done (or are in progress) for
     #  each submission.
@@ -102,9 +107,10 @@ module DynamicReviewAssignmentHelper
         @submission_review_count[submission.id] = existing_maps.size
         end
     end
-
+    #print(@submission_review_count)
     # Sort and return the list of submissions by the number of reviews that they have.
     sorted_review_count =  @submission_review_count.sort {|a, b| a[1]<=>b[1]}
+    #print(sorted_review_count)
     return sorted_review_count
     end
 
