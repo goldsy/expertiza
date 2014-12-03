@@ -21,7 +21,7 @@
       <%@i += 1%>
       <tr>
         <td>
-          <% participant =  Participant.find(map[0],params[:assignment_id]) %>
+          <% participant =  Participant.find(map[0]) %>
           <% is_disabled = false %>
           <% if participant!= nil && participant.submit_allowed%>
             <% if (map[1] == 0) %>
@@ -36,7 +36,7 @@
             <%= radio_button_tag 'submission_id', participant.id ,false,:disabled => is_disabled %><%=h "Submission " + @i.to_s %>
           </td>
           <td>
-            <%= render :partial => 'submitted_content/main', :locals => {:participant => participant, :stage =>  @stage} %>
+            <!-- render :partial => 'submitted_content/main', :locals => {:participant => participant, :stage =>  @stage} -->
           </td>
         </tr>
 
