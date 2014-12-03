@@ -3,31 +3,55 @@ FactoryGirl.define do
     password              "password"
     password_confirmation "password"
     is_new_user           0
+    sequence(:name) { |n| "user#{n}" }
+    email           { "#{name}@mailinator.com" }
 
     factory :instructor do
-      name  "instructor"
-      email { "#{name}@mailinator.com" }
+     # name  "instructor"
+     # email { "#{name}@mailinator.com" }
       role  { Role.find_by_name('instructor') }
     end
 
     # Can create many unique students
     factory :student do
+     # sequence(:name) { |n| "student#{n}" }
+     # email           { "#{name}@mailinator.com" }
+      role            { Role.find_by_name('student') }
+    end
+
+    # Create a student with unique password for testing password scenarios.
+    factory :alt_student do
       sequence(:name) { |n| "student#{n}" }
       email           { "#{name}@mailinator.com" }
       role            { Role.find_by_name('student') }
 
-      # Create a student with unique password for testing password scenarios.
-      factory :alt_student do
-        # Overwrite the standard factory password.
-        password              "alt_password"
-        password_confirmation "alt_password"
-      end
+      # Overwrite the standard factory password.
+      password              "alt_password"
+      password_confirmation "alt_password"
     end
+  end
+#  factory :participant do
+ #   topic_id     {SignUpTopic.find_by_topic_name('topic1').id}
+ #   type     "AssignmentParticipant"
+
+ # factory :teams_user do
+ #  team_id    {Team.find_by_name('Team1').id}
+ # end
+  
+  factory :team do
+    sequence(:name) { |n| "team#{n}" }
+    parent_id       0  
+  #  after(:create) do |teams_user|
+      #team.create_node
+
+      # Assign due dates to the assignment
+ #     FactoryGirl.create :teams_user, team: team
+ #  end
   end
 
   factory :due_date do
     assignment
-    due_at                      { Date.tomorrow }
+    due_at                      { Date.tomorrow}
     deadline_type               { DeadlineType.find_by_name('submission') }
     submission_allowed_id       { DeadlineRight.find_by_name('OK').id }
     review_allowed_id           { DeadlineRight.find_by_name('OK').id }
@@ -36,7 +60,7 @@ FactoryGirl.define do
   end
 
   factory :assignment do
-    name                    "assignment"
+    sequence(:name) { |n| "assignment#{n}" }
     directory_path          { "#{name}_path" }
     submitter_count         0
     course_id               0
@@ -47,7 +71,7 @@ FactoryGirl.define do
     num_review_of_reviewers 0
     wiki_type               { WikiType.find_by_name('No') }
     num_reviewers           0
-    max_team_size           3
+    max_team_size           3 
     staggered_deadline      0
     review_topic_threshold  0
     copy_flag               0
@@ -57,14 +81,17 @@ FactoryGirl.define do
     calculate_penalty       0
     is_penalty_calculated   0
     review_assignment_strategy  "Auto-Selected"
-
+   
     # Need to create a node after creating an assignment
     after(:create) do |assignment|
       assignment.create_node
 
       # Assign due dates to the assignment
       FactoryGirl.create :due_date, assignment: assignment
+      # Assign due dates to the assignment
+      FactoryGirl.create :sign_up_topic, assignment: assignment
     end
+
   end
 
   factory :sign_up_topic do
@@ -75,4 +102,12 @@ FactoryGirl.define do
     topic_identifier      1
     micropayment          0
   end
+
+
+ factory :assignment_participant do
+      user
+      assignment
+      handle  "handle"
+  end
+
 end
